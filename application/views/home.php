@@ -1,5 +1,6 @@
 <div class="row">
 	<div class="col-md-3">
+		<div class="alert message-login"></div>
 		<form action="<?= base_url('users/login') ?>" method="post" id="formLogin" enctype="multipart/form-data">
 			<div class="form-group">
 				<label for="username">Nome de usuário</label>
@@ -15,6 +16,7 @@
 		</form>
 	</div>
 	<div class="col-md-3">
+		<div class="alert message-add"></div>
 		<form action="<?= base_url('users/add') ?>" method="post" id="formSignin" enctype="multipart/form-data">
 			<div class="form-group">
 				<label for="name">Nome</label>

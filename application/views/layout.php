@@ -16,6 +16,10 @@
 	<?= $contents ?>
 	<script type="text/javascript" src="<?= base_url('assets/js/jQuery/jquery-3.2.1.min.js') ?>"></script>
 	<script type="text/javascript" src="<?= base_url('assets/js/bootstrap/bootstrap.min.js') ?>"></script>
+	<script type="text/javascript" src="<?= base_url('assets/js/jQuery.form/jquery.form.min.js') ?>"></script>
+	<script type="text/javascript">
+		var base_url = "<?= base_url() ?>";
+	</script>
 	<?php
 		if(isset($scripts) && is_array($scripts))
 			foreach($scripts as $script)

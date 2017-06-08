@@ -27,4 +27,9 @@ class Users_model extends CI_Model{
 		$this->db->where('username', $user);
 		return $this->db->get($this->table);
 	}
+
+	public function getById($idUser){
+		$this->db->where('idUser', $idUser);
+		return $this->db->get($this->table);
+	}
 }

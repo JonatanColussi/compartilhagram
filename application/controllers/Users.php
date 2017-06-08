@@ -24,61 +24,80 @@ class Users extends CI_Controller{
 				$image = $this->imageUpload($idUser, 'users');
 				$data['image'] = $image;
 				$this->Users_model->store($data, $idUser);
+				
+				die(
+					json_encode(
+						array(
+							'success'  => true,
+							'message'  => 'Usuário cadastrado com sucesso',
+							'redirect' => 'feed',
+							'selector' => '.message-add'
+						)
+					)
+				);
 
-				$variables['mensagem'] = "Dados gravados com sucesso!";
-				$this->template->set('title', 'Compartilhagram | Feed de fotos');
-
-				$this->template->load('layout', 'feed', $variables);
 			}else{
-				$variables['mensagem'] = "Ocorreu um erro. Por favor, tente novamente.";
-				$this->template->load('layout', 'home', $variables);
+				die(
+					json_encode(
+						array(
+							'success'  => false,
+							'message'  => 'Ocorreu um erro. Por favor, tente novamente mais tarde.',
+							'selector' => '.message-add'
+						)
+					)
+				);
 			}
 		}else{
-			$styles[] = base_url('assets/css/src/home.css');
-			$scripts[] = base_url('assets/js/src/home.js');
-
-			$this->template->set('title', 'Compartilhagram | Poste suas fotos On The Line');
-			$this->template->set('styles', $styles);
-			$this->template->set('scripts', $scripts);
-
-
-			$this->template->load('layout', 'home');
+			die(
+				json_encode(
+					array(
+						'success'  => false,
+						'message'  => 'O nome de usuário já está sendo utilizado!',
+						'selector' => '.message-add'
+					)
+				)
+			);
 		}
 	}
 
 	public function login(){
 		$this->load->model('Users_model');
-		$variables['error'] = '';
+		$error = false;
 		$data = $this->input->post();
 
 		if(isset($data['username']) && isset($data['password'])){
 			$dataUser = $this->Users_model->login($data['username']);
 			if($dataUser->num_rows() > 0){
-				if(password_verify($data['password', $dataUser->row()->password) === false)
-					$variables['error'] = 'Usuário e/ou senha inválidos';
+				if(password_verify($data['password'], $dataUser->row()->password) === false)
+					$error = true;
 				else
 					$this->session->set_userdata('idUser', $dataUser->row()->idUser);
 			}else
-				$variables['error'] = 'Usuário e/ou senha inválidos';
+				$error = true;
 		}else
-			$variables['error'] = 'Usuário e/ou senha inválidos';
+			$error = true;
 
-		if($variables['error'] == ''){
-			$this->template->set('title', 'Compartilhagram | Feed de fotos');
-
-			$this->template->load('layout', 'feed');
-		}else{
-			$styles[] = base_url('assets/css/src/home.css');
-			$scripts[] = base_url('assets/js/src/home.js');
-
-			$this->template->set('title', 'Compartilhagram | Poste suas fotos On The Line');
-			$this->template->set('styles', $styles);
-			$this->template->set('scripts', $scripts);
-
-
-			$this->template->load('layout', 'home', $variables);
-		}
-
+		if(!$error)
+			die(
+				json_encode(
+					array(
+						'success'  => true,
+						'message'  => 'Bem vindo ao Compartilhagram',
+						'redirect' => 'feed',
+						'selector' => '.message-login'
+					)
+				)
+			);
+		else
+			die(
+				json_encode(
+					array(
+						'success'  => false,
+						'message'  => 'Usuário e/ou senha inválidos',
+						'selector' => '.message-login'
+					)
+				)
+			);
 	}
 
 	private function imageUpload($id, $folder){

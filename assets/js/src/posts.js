@@ -80,8 +80,7 @@ jQuery(document).ready(function($) {
 
     $("form[name=formPost]").ajaxForm({ 
         beforeSubmit: showRequest,
-        success: showResponse,
-        dataType: 'json'
+        success: showResponse
     });
 });
 
@@ -104,37 +103,3 @@ function showResponse(response, statusText, xhr, $form){
 	}else
 		alert('Ocorreu um erro inesperado');
 }
-
-    // $("form[name=formPost]").on('submit', function(event){
-    // 	event.preventDefault();
-    // 	var $form  = $(this);
-    // 	var data   = $form.serialize();
-    // 	var action = $form.attr('action');
-    // 	var method = $form.attr('method');
-
-    // 	$button = $form.find('[type=submit]');
-    	
-    // 	$.ajax({
-    // 		url: action,
-    // 		type: method,
-    // 		data: data,
-    // 		beforeSend: function(){
-    // 			$button.prop('disabled', true);
-    // 		},
-    // 		success: function(response){
-    // 			$button.prop('disabled', false);
-
-				// if(response != false){
-				// 	$('.feed').prepend(response);
-				// 	$form.find('textarea').val('');
-				// 	$form.find('input').val('');
-				// 	$form.find('input[type=file]').siblings('span').text('');
-				// 	$form.find('.textarea-counter').text('140 caracteres restantes');
-				// }else
-				// 	alert('Ocorreu um erro inesperado');
-    // 		},
-    // 		error: function(){
-    // 			alert('Ocorreu um erro inesperado');
-    // 		}
-    // 	});
-    // });

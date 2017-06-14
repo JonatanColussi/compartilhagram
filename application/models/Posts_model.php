@@ -24,8 +24,10 @@ class Posts_model extends CI_Model{
 	}
 
 	public function getPost($idPost){
+		$this->db->select('p.*, u.name');
+		$this->db->join('users u', 'u.idUser = p.idUser');
 		$this->db->where('idPost', $idPost);
-		return $this->db->get($this->table);
+		return $this->db->get($this->table.' p');
 	}
 
 	public function getAllPosts(){

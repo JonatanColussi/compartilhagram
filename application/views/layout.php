@@ -6,6 +6,7 @@
 	<link rel="stylesheet" type="text/css" href="<?= base_url('assets/css/bootstrap/bootstrap.min.css') ?>">
 	<link rel="stylesheet" type="text/css" href="<?= base_url('assets/css/fontAwesome/font-awesome.min.css') ?>">
 	<link rel="stylesheet" type="text/css" href="<?= base_url('assets/css/compiled/style.min.css') ?>">
+	<link rel="stylesheet" type="text/css" href="<?= base_url('assets/css/src/base.css') ?>">
 	<?php
 		if(isset($styles) && is_array($styles))
 			foreach($styles as $style)

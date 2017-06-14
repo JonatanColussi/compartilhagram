@@ -3,13 +3,14 @@
 		<aside class="col-md-3">
 			<img src="<?= base_url('uploads/users/'.$user->image) ?>" alt="<?= $user->name ?>" width="100">
 			<h4 class="name"><?= $user->name ?></h4>
-			<h6 class="user">?<?= $user->username ?></h6>
+			<h6 class="user"><?= $user->username ?></h6>
+			<a href="<?= base_url('users/logout') ?>"><i class="fa fa-sign-out" aria-hidden="true"></i> Sair</a>
 		</aside>
 		<main class="col-md-9">
 			<div class="row">
 				<div class="col-md-12">
 					<h1>Poste sua foto On The Line</h1>
-					<form action="<?= base_url('posts/add') ?>" method="post" enctype="multipart/form-data">
+					<form action="<?= base_url('posts/add') ?>" method="post" enctype="multipart/form-data" name="formPost">
 						<div class="row">
 							<div class="col-md-3">
 								<div class="form-group">
@@ -23,6 +24,7 @@
 								<div class="form-group">
 									<label for="description">Descrição</label>
 									<textarea name="description" id="description" rows="3" maxlength="140" class="form-control"></textarea>
+									<span class="textarea-counter">140 caracteres restantes</span>
 								</div>
 							</div>
 						</div>
@@ -37,39 +39,11 @@
 				</div>
 			</div>
 			<hr>
-			<div class="row">
-				<pre>
-					
-				<?php print_r($posts); ?>
-				</pre>
-				<div class="col-md-12">
-					<img src="<?= base_url('uploads/users/8	.png') ?>" alt="" class="img-responsive">
-					<span class="likes">123 Likes</span>
-					<div class="comments">
-						<div>
-							<span>Usuário 1</span>
-							<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsum dolores obcaecati ex, et quasi in doloribus fugiat quos quam eum similique nesciunt dignissimos earum molestias culpa impedit, modi, atque dolore!</p>
-						</div>
-						<div>
-							<span>Usuário 1</span>
-							<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsum dolores obcaecati ex, et quasi in doloribus fugiat quos quam eum similique nesciunt dignissimos earum molestias culpa impedit, modi, atque dolore!</p>
-						</div>
-						<div>
-							<span>Usuário 1</span>
-							<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsum dolores obcaecati ex, et quasi in doloribus fugiat quos quam eum similique nesciunt dignissimos earum molestias culpa impedit, modi, atque dolore!</p>
-						</div>
-					</div>
-					<label for="comment">Deixe seu comentário</label>
-					<form action="<?= base_url('posts/comment') ?>" method="post" enctype="multipart/form-data">
-						<input type="hidden" name="postId" value="1">
-						<textarea name="comment" id="comment" rows="3" maxlength="140" class="form-control"></textarea>
-						<div class="text-right">
-							<div class="text-right">
-								<button class="btn btn-primary" type="submit">Comentar</button>
-							</div>
-						</div>
-					</form>
-				</div>
+			<div class="row feed">
+				<?php
+					foreach($posts as $post)
+						$this->load->view('includes/post', $post);
+				?>
 			</div>
 		</main>
 	</div>

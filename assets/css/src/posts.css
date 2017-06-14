@@ -1,3 +1,54 @@
+textarea{
+	resize: none;
+}
 input[type=file][name=image]{
 	display: none;
+}
+
+button.like{
+	margin:  1em 0;
+}
+button.like:before{
+	font: normal normal normal 14px/1 FontAwesome;
+	content: "\f087";
+	margin-right: 5px;
+}
+button.like.liked:before{
+	content: "\f164";
+}
+
+.post .comments > div{
+	border: 1px solid #eee;
+	padding: 1em 1em 0 1em;
+	background-color: #fff
+}
+
+.post .comments > div > span{
+	font-weight: 700;
+}
+
+.post .comments{
+	max-height: 200px;
+	overflow-y: auto;
+}
+
+.post .description{
+	background-color: #fff;
+	margin: 0.5em 0;
+	padding: 0.5em;
+}
+.post form{
+	margin-top: 1em;
+}
+.post form button[type=submit]{
+	float: right;
+    margin: 0.5em 0;
+}
+
+.post .user{
+	font-weight: 700;
+}
+.post .user:after{
+	content: ' - ';
+	font-weight: normal;
 }

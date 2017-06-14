@@ -100,6 +100,11 @@ class Users extends CI_Controller{
 			);
 	}
 
+	public function logout(){
+		$this->session->set_userdata('idUser', null);
+		redirect('home');
+	}
+
 	private function imageUpload($id, $folder){
         $type = strchr($_FILES['image']['name'], '.');
 

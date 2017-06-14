@@ -14,9 +14,17 @@ class Posts extends CI_Controller{
 
 		$this->load->model('Users_model');
 		$this->load->model('Posts_model');
+		$this->load->model('Likes_model');
+		$this->load->model('Comments_model');
 
 		$variables['user']  =  $this->Users_model->getById($this->session->userdata('idUser'))->row();
 		$variables['posts'] =  $this->Posts_model->getAllPosts()->result();
+
+		foreach($variables['posts'] as &$post){
+			$post->qtdLikes = $this->Likes_model->getNumberOfLikes($post->idPost);
+			$post->comments = $this->Comments_model->getComments($post->idPost);
+			$post->liked    = $this->Likes_model->liked($post->idPost, $this->session->userdata('idUser'));
+		}
 
 		$this->template->set('title', 'Compartilhagram | Poste suas fotos On The Line');
 		$this->template->set('styles', $styles);
@@ -28,6 +36,8 @@ class Posts extends CI_Controller{
 
 	public function add(){
 		$this->load->model('Posts_model');
+		$this->load->model('Likes_model');
+		$this->load->model('Comments_model');
 
 		$data = $this->input->post();
 		$data['idUser'] = $this->session->userdata('idUser');
@@ -37,39 +47,52 @@ class Posts extends CI_Controller{
 			
 		if($idPost > 0){
 			$image = $this->imageUpload($idPost, 'posts');
-			$data['image'] = $image;
+			if($image !== false){
+				$data['image'] = $image;
+				$this->Posts_model->store($data, $idPost);
 
-			$this->Posts_model->store($data, $idPost);
+				$post = $this->Posts_model->getPost($idPost)->row();
+				$post->qtdLikes = $this->Likes_model->getNumberOfLikes($post->idPost);
+				$post->comments = $this->Comments_model->getComments($post->idPost);
+				$post->liked    = $this->Likes_model->liked($post->idPost, $this->session->userdata('idUser'));
 
-			die(
-				json_encode(
-					array(
-						'success'  => true,
-						'message'  => 'Usuário cadastrado com sucesso',
-						'redirect' => 'feed',
-						'selector' => '.message-add'
-					)
-				)
-			);
+				$this->load->view('includes/post', $post);
+			}else{
+				$this->Posts_model->delete($idPost);
+				echo json_encode(false);
+			}
+		}else
+			echo json_encode(false);
+	}
 
-		}else{
-			die(
-				json_encode(
-					array(
-						'success'  => false,
-						'message'  => 'Ocorreu um erro. Por favor, tente novamente mais tarde.',
-						'selector' => '.message-add'
-					)
-				)
-			);
-		}
+	public function like(){
+		$this->load->model('Likes_model');
+		$data = $this->input->get();
+
+		$like = $this->Likes_model->like($data['idPost'], $this->session->userdata('idUser'));
+
+		die(json_encode($like));
+	}
+
+	public function comment(){
+		$this->load->model('Comments_model');
+		$data = $this->input->post();
+		$data['idUser'] = $this->session->userdata('idUser');
+		$data['date'] = date('Y-m-d H:i:s');
+		
+		$idComment = $this->Comments_model->comment($data);
+
+		if($idComment !== false)
+			$this->load->view('includes/comment', $this->Comments_model->getComment($idComment));
+		else
+			die(json_encode(false));
 	}
 
 	private function imageUpload($id, $folder){
         $type = strchr($_FILES['image']['name'], '.');
 
 		$config['upload_path']   = "./uploads/{$folder}/";
-        $config['allowed_types'] = 'gif|jpg|png';
+        $config['allowed_types'] = 'gif|jpg|png|jpeg';
         $config['file_name']     = $id.$type;
 
         $this->load->library('upload', $config);
@@ -77,6 +100,6 @@ class Posts extends CI_Controller{
         if($this->upload->do_upload('image'))
         	return $config['file_name'];
         else
-        	echo $this->upload->display_errors();
+        	return false;
 	}
 }

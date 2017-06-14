@@ -29,37 +29,14 @@ class Posts_model extends CI_Model{
 	}
 
 	public function getAllPosts(){
-		return $this->db->get($this->table);
+		$this->db->select('p.*, u.name');
+		$this->db->join('users u', 'u.idUser = p.idUser');
+		$this->db->order_by('date', 'DESC');
+		return $this->db->get($this->table.' p');
 	}
 
-	public function getNumberOfLikes($idPost){
-		$this->db->select('COUNT(*) AS qtdLikes');
+	public function delete($idPost){
 		$this->db->where('idPost', $idPost);
-		return $this->db->get('likes')->row()->qtdLikes;
-	}
-	public function getComments($idPost){
-		$this->db->where('idPost', $idPost);
-		return $this->db->get('comments')->result();
-	}
-
-	public function like($idPost, $idUser){
-		$this->db->select('COUNT(*) AS qtdLikes');
-		$this->db->where('idPost', $idPost);
-		$this->db->where('idUser', $idUser);
-		if($this->db->get('likes')->row()->qtdLikes == 0)
-			$this->doLike($idPost, $idUser);
-		else
-			$this->undoLike($idPost, $idUser);
-		return $this->getNumberOfLikes($idPost);
-	}
-
-	private function doLike($idPost, $idUser){
-		$this->db->insert('likes', array('idPost' => $idPost, 'idUser' => $idUser));
-	}
-
-	private function undoLike($idPost, $idUser){
-		$this->db->where('idPost', $idPost);
-		$this->db->where('idUser', $idUser);
-		$this->db->delete('likes');
+		$this->db->delete($this->table);
 	}
 }

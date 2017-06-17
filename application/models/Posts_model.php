@@ -2,7 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Posts_model extends CI_Model{
-	private $table = 'posts';
+	private $table = 'Posts';
 
 	public function store($dados = null, $id = null){
 		if($dados){
@@ -25,14 +25,14 @@ class Posts_model extends CI_Model{
 
 	public function getPost($idPost){
 		$this->db->select('p.*, u.name');
-		$this->db->join('users u', 'u.idUser = p.idUser');
+		$this->db->join('Users u', 'u.idUser = p.idUser');
 		$this->db->where('idPost', $idPost);
 		return $this->db->get($this->table.' p');
 	}
 
 	public function getAllPosts(){
 		$this->db->select('p.*, u.name');
-		$this->db->join('users u', 'u.idUser = p.idUser');
+		$this->db->join('Users u', 'u.idUser = p.idUser');
 		$this->db->order_by('date', 'DESC');
 		return $this->db->get($this->table.' p');
 	}

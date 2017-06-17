@@ -6,14 +6,14 @@ class Likes_model extends CI_Model{
 	public function getNumberOfLikes($idPost){
 		$this->db->select('COUNT(*) AS qtdLikes');
 		$this->db->where('idPost', $idPost);
-		return $this->db->get('likes')->row()->qtdLikes;
+		return $this->db->get('Likes')->row()->qtdLikes;
 	}
 
 	public function liked($idPost, $idUser){
 		$this->db->select('COUNT(*) AS qtdLikes');
 		$this->db->where('idPost', $idPost);
 		$this->db->where('idUser', $idUser);
-		return !($this->db->get('likes')->row()->qtdLikes == 0);
+		return !($this->db->get('Likes')->row()->qtdLikes == 0);
 	}
 	public function like($idPost, $idUser){
 		if($this->liked($idPost, $idUser)){
@@ -27,12 +27,12 @@ class Likes_model extends CI_Model{
 	}
 
 	private function doLike($idPost, $idUser){
-		$this->db->insert('likes', array('idPost' => $idPost, 'idUser' => $idUser));
+		$this->db->insert('Likes', array('idPost' => $idPost, 'idUser' => $idUser));
 	}
 
 	private function undoLike($idPost, $idUser){
 		$this->db->where('idPost', $idPost);
 		$this->db->where('idUser', $idUser);
-		$this->db->delete('likes');
+		$this->db->delete('Likes');
 	}
 }

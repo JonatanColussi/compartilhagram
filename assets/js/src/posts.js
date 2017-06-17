@@ -11,66 +11,66 @@ jQuery(document).ready(function($) {
 		$(this).siblings('span').text(image);
 	});
 
-    $("form[name=formComment]").on('submit', function(event){
-    	event.preventDefault();
-    	var $form  = $(this);
-    	var data   = $form.serialize();
-    	var action = $form.attr('action');
-    	var method = $form.attr('method');
+    $(".feed").delegate('form[name=formComment]', 'submit', function(event){
+        event.preventDefault();
+        var $form  = $(this);
+        var data   = $form.serialize();
+        var action = $form.attr('action');
+        var method = $form.attr('method');
 
-    	$button = $form.find('[type=submit]');
-    	
-    	$.ajax({
-    		url: action,
-    		type: method,
-    		data: data,
-    		beforeSend: function(){
-    			$button.prop('disabled', true);
-    		},
-    		success: function(response){
-    			$button.prop('disabled', false);
+        $button = $form.find('[type=submit]');
+        
+        $.ajax({
+            url: action,
+            type: method,
+            data: data,
+            beforeSend: function(){
+                $button.prop('disabled', true);
+            },
+            success: function(response){
+                $button.prop('disabled', false);
 
-				if(response != false){
-					$form.siblings('.comments').append(response);
-					$form.find('textarea').val('');
-					$form.find('.textarea-counter').text('140 caracteres restantes');
-				}else
-					alert('Ocorreu um erro inesperado');
-    		},
-    		error: function(){
-    			alert('Ocorreu um erro inesperado');
-    		}
-    	});
+                if(response != false){
+                    $form.siblings('.comments').append(response);
+                    $form.find('textarea').val('');
+                    $form.find('.textarea-counter').text('140 caracteres restantes');
+                }else
+                    alert('Ocorreu um erro inesperado');
+            },
+            error: function(){
+                alert('Ocorreu um erro inesperado');
+            }
+        });
+    });
+    
+    $(".feed").delegate('button.like', 'click', function(event){
+        event.preventDefault();
+        var idPost = $(this).data('idpost');
+
+        var $likeButton = $(this);
+
+        $.ajax({
+            url: base_url+'posts/like',
+            type: 'GET',
+            dataType: 'json',
+            data: {
+                idPost: idPost
+            },
+            success: function(response){
+                $likeButton.html(response[1]+' Likes');
+                if(response[0])
+                    $likeButton.addClass('liked');
+                else
+                    $likeButton.removeClass('liked');
+
+            },
+            error: function(){
+                alert('Ocorreu um erro inesperado');
+            }
+        });
     });
 
-    $("button.like").on('click', function(event){
-    	event.preventDefault();
-    	var idPost = $(this).data('idpost');
-
-    	var $likeButton = $(this);
-
-    	$.ajax({
-    		url: base_url+'posts/like',
-    		type: 'GET',
-    		dataType: 'json',
-    		data: {
-    			idPost: idPost
-    		},
-    		success: function(response){
-				$likeButton.html(response[1]+' Likes');
-    			if(response[0])
-    				$likeButton.addClass('liked');
-    			else
-    				$likeButton.removeClass('liked');
-
-    		},
-    		error: function(){
-    			alert('Ocorreu um erro inesperado');
-    		}
-    	});
-    });
-
-    $("textarea").on('keydown keyup', function(){
+    $("body").delegate('textarea', 'keydown keyup', function(){
     	$counter = $(this).siblings('.textarea-counter');
     	if($(this).attr('maxlength')){
     		let rest = $(this).attr('maxlength') - $(this).val().length;

@@ -2,7 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Users_model extends CI_Model{
-	private $table = 'users';
+	private $table = 'Users';
 
 	public function store($dados = null, $id = null){
 		if($dados){

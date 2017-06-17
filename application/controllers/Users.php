@@ -8,7 +8,7 @@ class Users extends CI_Controller{
 
 
 		$data = $this->input->post();
-		$this->form_validation->set_rules('username', 'Nome de usuário', 'is_unique[users.username]', array('is_unique' => 'O %s já está sendo utilizado'));
+		$this->form_validation->set_rules('username', 'Nome de usuário', 'is_unique[Users.username]', array('is_unique' => 'O %s já está sendo utilizado'));
 
 		if($this->form_validation->run()){
 
